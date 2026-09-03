@@ -30,24 +30,23 @@ export class Game {
 
   async start() {
     const app = new Application();
+    const canvas = document.createElement("canvas");
+    canvas.style.display = "block";
+    this.mount.appendChild(canvas);
+
     const width = Math.max(1, window.innerWidth || 1280);
     const height = Math.max(1, window.innerHeight || 720);
 
-    await Promise.race([
-      app.init({
-        preference: ["canvas"],
-        background: LETTERBOX,
-        width,
-        height,
-        antialias: false,
-      }),
-      new Promise((_, reject) => {
-        setTimeout(() => reject(new Error("Game renderer failed to start")), 5000);
-      }),
-    ]);
+    await app.init({
+      canvas,
+      preference: ["canvas"],
+      manageImports: false,
+      background: LETTERBOX,
+      width,
+      height,
+      antialias: false,
+    });
 
-    this.mount.appendChild(app.canvas);
-    app.canvas.style.display = "block";
     app.resizeTo = window;
     this.app = app;
 
