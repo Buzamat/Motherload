@@ -19,11 +19,11 @@ export class Camera {
   }
 
   get screenWidth() {
-    return this.renderer.screen.width;
+    return this.renderer.screen.width || window.innerWidth;
   }
 
   get screenHeight() {
-    return this.renderer.screen.height;
+    return this.renderer.screen.height || window.innerHeight;
   }
 
   get frameWidth() {
