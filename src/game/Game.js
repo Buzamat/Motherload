@@ -34,8 +34,12 @@ export class Game {
       background: LETTERBOX,
       resizeTo: window,
       antialias: false,
+      preference: "webgl",
+      autoDensity: true,
+      resolution: window.devicePixelRatio || 1,
     });
     this.mount.appendChild(app.canvas);
+    app.resize?.();
     this.app = app;
 
     const world = new World(CONFIG.world, new FlatWorldGenerator());
@@ -77,6 +81,9 @@ export class Game {
 
     this.fitCamera();
 
+    app.renderer.on("resize", () => {
+      this.fitCamera();
+    });
     window.addEventListener("resize", () => {
       this.fitCamera();
     });
