@@ -30,16 +30,25 @@ export class Game {
 
   async start() {
     const app = new Application();
-    await app.init({
-      background: LETTERBOX,
-      resizeTo: window,
-      antialias: false,
-      preference: "webgl",
-      autoDensity: true,
-      resolution: window.devicePixelRatio || 1,
-    });
+    const width = Math.max(1, window.innerWidth || 1280);
+    const height = Math.max(1, window.innerHeight || 720);
+
+    await Promise.race([
+      app.init({
+        preference: ["canvas"],
+        background: LETTERBOX,
+        width,
+        height,
+        antialias: false,
+      }),
+      new Promise((_, reject) => {
+        setTimeout(() => reject(new Error("Game renderer failed to start")), 5000);
+      }),
+    ]);
+
     this.mount.appendChild(app.canvas);
-    app.resize?.();
+    app.canvas.style.display = "block";
+    app.resizeTo = window;
     this.app = app;
 
     const world = new World(CONFIG.world, new FlatWorldGenerator());
